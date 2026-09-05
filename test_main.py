@@ -1,5 +1,7 @@
+import pytest
 from fastapi.testclient import TestClient
 from main import app
+
 
 client = TestClient(app)
 
@@ -27,6 +29,7 @@ def test_update_ticket():
     assert response.json()["title"] == "Test update ticket"
     assert response.status_code == 200
 
+@pytest.mark.skip(reason="Voyage AI free tier rate limit (3 RPM) - chạy local, không chạy trên CI")
 def test_create_ticket_with_similar():
     client.post("/tickets", json={
         "title": "Network outage",
