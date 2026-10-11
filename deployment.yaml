@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-ops-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-ops-assistant
+  template:
+    metadata:
+      labels:
+        app: ai-ops-assistant
+    spec:
+      containers:
+        - name: ai-ops-assistant
+          image: 948982764834.dkr.ecr.us-east-1.amazonaws.com/ai-ops-assistant:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: ai-ops-secrets
+            - configMapRef:
+                name: ai-ops-config
