@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
 
-DATABASE_URL = "sqlite:///./tickets.db"
+DATABASE_URL = "sqlite:///./data/tickets.db"
 
 engine = create_engine(DATABASE_URL, connect_args= {"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -16,6 +16,7 @@ class Ticket(Base):
     description = Column(String)
     severity = Column(String, default="unclassified")
     created_at = Column(DateTime, default=datetime.utcnow)
+    assigned_to = Column(Integer, index=True, nullable=True)
 
 def get_db():
     db = SessionLocal()
