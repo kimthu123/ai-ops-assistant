@@ -10,6 +10,9 @@ import os
 from anthropic import Anthropic
 from rag import add_ticket_to_index, find_similar_tickets
 
+from sqlalchemy import func
+from schemas import SeverityCount, SeverityAnalytics
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()   #test
@@ -104,6 +107,12 @@ def delete_ticket(ticket_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Ticket deleted", "ticket_id": ticket_id}
 
+@app.get("/analytics/severity", response_model=SeverityAnalytics)
+def severity_analytics(db: Session = Depends(get_db)):
+    rows = db.query(Ticket.severity, func.count(Ticket.id)).group_by(Ticket.severity).all()
+    by_severity = [SeverityCount(severity=s, count=c) for s, c in rows]
+    total = sum(c for _, c in rows)
+    return SeverityAnalytics(total=total, by_severity=by_severity)
 
 
 

@@ -15,3 +15,11 @@ class TicketResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SeverityCount(BaseModel):
+    severity: str
+    count: int
+
+class SeverityAnalytics(BaseModel):
+    total: int
+    by_severity: list [SeverityCount] 
