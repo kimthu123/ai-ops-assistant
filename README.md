@@ -102,6 +102,8 @@ pytest
 | PUT | `/tickets/{id}` | Update a ticket, re-classifying severity based on new content |
 | DELETE | `/tickets/{id}` | Delete a ticket |
 | GET | `/tickets/search/similar` | Search for similar tickets given any title/description |
+| GET | `/analytics/severity` | Ticket counts grouped by severity level, with the overall total |
+| GET | `/analytics/daily` | Ticket counts grouped by day (sorted ascending), with the overall total |
 
 ---
 
