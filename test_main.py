@@ -5,6 +5,14 @@ from main import app
 
 client = TestClient(app)
 
+@pytest.fixture(autouse=True)
+def fake_rag(monkeypatch):
+    monkeypatch.setattr("main.add_ticket_to_index", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        "main.find_similar_tickets",
+        lambda *args, **kwargs: {"ids": [[]], "documents": [[]], "distances": [[]]},
+    )
+
 def test_create_ticket():
     response = client.post("/tickets", json={
         "title": "Test ticket",
@@ -21,7 +29,7 @@ def test_get_ticket_not_found():
     response = client.get("/tickets/999999")
     assert response.status_code == 404
 
-@pytest.mark.skip(reason="Voyage AI free tier rate limit (3 requests/min)")
+
 def test_update_ticket():
     created = client.post("/tickets", json={
         "title": "Ticket to update",
