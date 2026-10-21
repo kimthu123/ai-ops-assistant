@@ -13,6 +13,8 @@ from rag import add_ticket_to_index, find_similar_tickets
 from sqlalchemy import func
 from schemas import SeverityCount, SeverityAnalytics
 
+from schemas import DailyCount, DailyAnalytics
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()   #test
@@ -113,6 +115,13 @@ def severity_analytics(db: Session = Depends(get_db)):
     by_severity = [SeverityCount(severity=s, count=c) for s, c in rows]
     total = sum(c for _, c in rows)
     return SeverityAnalytics(total=total, by_severity=by_severity)
+
+@app.get("/analytics/daily", response_model=DailyAnalytics)
+def daily_analytics(db: Session = Depends(get_db)):
+    rows = db.query(func.date(Ticket.created_at), func.count(Ticket.id)).group_by(func.date(Ticket.created_at)).order_by(func.date(Ticket.created_at)).all()
+    by_dailycount = [DailyCount(date=d, num_tickets=n) for d, n in rows]
+    total = sum(n for d, n in rows)
+    return DailyAnalytics(total=total, by_dailycount=by_dailycount)
 
 
 

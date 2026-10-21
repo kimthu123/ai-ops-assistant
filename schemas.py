@@ -23,3 +23,13 @@ class SeverityCount(BaseModel):
 class SeverityAnalytics(BaseModel):
     total: int
     by_severity: list [SeverityCount] 
+
+class DailyCount(BaseModel):
+    date: str
+    num_tickets: int
+
+class DailyAnalytics(BaseModel):
+    total: int
+    by_dailycount: list[DailyCount]
+
+

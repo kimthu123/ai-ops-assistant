@@ -58,3 +58,13 @@ def test_severity_analytics():
     assert "total" in data
     assert "by_severity" in data
     assert data["total"] == sum(item["count"] for item in data["by_severity"])
+
+def test_daily_analytics():
+    response = client.get("/analytics/daily")
+    assert response.status_code == 200
+
+    data = response.json()
+    assert data["total"] == sum(item["num_tickets"] for item in data["by_dailycount"])
+
+    dates = [item["date"] for item in data["by_dailycount"]]
+    assert dates == sorted(dates)
