@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
-from datetime import datetime
+from datetime import datetime, timezone
 
 DATABASE_URL = "sqlite:///./data/tickets.db"
 
@@ -15,7 +15,7 @@ class Ticket(Base):
     title = Column(String, index=True)
     description = Column(String)
     severity = Column(String, default="unclassified")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     assigned_to = Column(Integer, index=True, nullable=True)
 
 def get_db():

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 class TicketCreate(BaseModel):
@@ -12,9 +12,7 @@ class TicketResponse(BaseModel):
     severity: str
     created_at: datetime
     similar_tickets: list = []
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SeverityCount(BaseModel):
     severity: str
