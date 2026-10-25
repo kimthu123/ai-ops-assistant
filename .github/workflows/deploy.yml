@@ -31,7 +31,8 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-              - name: Update kubeconfig
+          
+      - name: Update kubeconfig
         run: aws eks update-kubeconfig --name ai-ops-cluster --region us-east-1
 
       - name: Deploy to EKS
