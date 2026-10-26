@@ -86,9 +86,32 @@ docker run -p 8000:8000 --env-file .env ai-ops-assistant
 
 ## Running Tests
 
-```bash
-pytest
+## CI/CD Pipeline
+
+```mermaid
+flowchart LR
+    A["Developer: git push to main"] --> T["Workflow: Run Tests (pytest)"]
+    A --> B
+
+    subgraph Deploy["Workflow: Build and Push to ECR (GitHub Actions runner)"]
+        B["Build Docker image"] --> C["Push image to ECR, tagged with commit SHA"]
+        C --> D["Update kubeconfig"]
+        D --> E["kubectl set image"]
+        E --> F["Wait for rollout status"]
+    end
+
+    C -.-> ECR[("Amazon ECR")]
+    E -.-> EKS["Amazon EKS cluster"]
+    F -->|rollout fails| R["Rollback: set image to an older SHA"]
 ```
+
+**How it works**
+- On every push to `main`, two workflows run in parallel: one runs `pytest`, the other builds and deploys.
+- The image is tagged with the commit SHA, not `latest`, because Kubernetes only rolls out when the image reference changes, and a SHA tag lets me roll back to an exact commit.
+- Deploys use a dedicated IAM user with least privilege: it can push to ECR and edit resources in the `default` namespace of the cluster, nothing else.
+- `kubectl rollout status` fails the workflow if the new pods do not become ready, so a broken release shows up as a red run.
+- Rollback: `kubectl set image` back to a previous commit SHA from ECR (or `kubectl rollout undo`).
+- Known limitation: deploy does not wait for tests yet. See the Roadmap.
 
 ---
 
