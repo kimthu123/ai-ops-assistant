@@ -177,3 +177,6 @@ A single request returns the saved ticket, an AI-assessed severity level, and re
 - [ ] Deploy to Kubernetes (Pods, Services, ConfigMaps)
 - [ ] Automate Docker image build + push in the CI/CD pipeline
 - [ ] Migrate from SQLite to PostgreSQL for production use
+- [ ] Gate the deploy on passing tests (single workflow with `needs:`)
+- [ ] Replace long-lived AWS keys with GitHub OIDC
+  
