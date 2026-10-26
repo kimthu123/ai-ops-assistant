@@ -103,3 +103,6 @@ def test_daily_analytics():
 
     dates = [item["date"] for item in data["by_dailycount"]]
     assert dates == sorted(dates)
+
+def test_gate_demo():
+    assert 1 == 2
